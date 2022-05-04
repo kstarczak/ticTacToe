@@ -121,14 +121,25 @@ playGame = (function () {
             if (score[winSequence[0]] === player.playerNumber && score[winSequence[1]] === player.playerNumber && score[winSequence[2]] === player.playerNumber) {
                 console.log(`${player.name} wins!`);
                 document.querySelector('.container-cover').style.display = 'block';
-                setTimeout(() => {declareWinner(player);}, 800);
+                setTimeout(() => { declareWinner(player); }, 800);
                 break;
-            };
+            } else if (score.every(index => index > 0)) {
+                document.querySelector('.container-cover').style.display = 'block';
+                setTimeout(() => { declareTie(); }, 800);
+                break;
+            }; 
         };
     };
 
     const declareWinner = function (player) {
         alert(`${player.name} wins the game! Click 'ok' to play again`);
+        gameBoard.clearGridArray();
+        playGame.newGame();
+        document.querySelector('.container-cover').style.display = 'none';
+    };
+
+    const declareTie = function () {
+        alert(`You tied! Click 'ok' to play again`);
         gameBoard.clearGridArray();
         playGame.newGame();
         document.querySelector('.container-cover').style.display = 'none';
