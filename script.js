@@ -44,8 +44,13 @@ setupGame = (function () {
     const startGame = function () {
         // set players with creatplayers
         // clear inputs, set defualt radio button
-        document.querySelector('.game-type-selector').style.display = 'none';
-        playGame.createBoard();
+        const playerVsPlayer = document.querySelector('#player-vs-player');
+        if (playerVsPlayer.checked) {
+            document.querySelector('.game-type-selector').style.display = 'none';
+            playGame.createBoard();
+        } else {
+            alert('You must select a game type to continue!')
+        };    
     }
     return {loadScreen/*, createPlayers*/};
 })();
@@ -64,9 +69,9 @@ Player = function (name, playerNumber, symbol) {
 
 
 //test code below, remove when function to add players works
-player1 = new Player('Fox', 1, 'x');
+player1 = new Player('"X"', 1, 'x');
 console.log(player1);
-player2 = new Player('Marmot', 2, 'o');
+player2 = new Player('"O"', 2, 'o');
 console.log(player2);
 // remove code above when function to add players works
 
