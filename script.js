@@ -70,9 +70,7 @@ Player = function (name, playerNumber, symbol) {
 
 //test code below, remove when function to add players works
 player1 = new Player('"X"', 1, 'x');
-console.log(player1);
 player2 = new Player('"O"', 2, 'o');
-console.log(player2);
 // remove code above when function to add players works
 
 
@@ -81,7 +79,7 @@ playGame = (function () {
     //get players somehow (add to an object or array?)and set current player to 1 as below
     let currentPlayer = player1
     //write code to add home button to top of page
-    
+    let winner = 0;
     const createBoard = function () {
         const gameGrid = document.createElement('div');
         gameGrid.classList.add('game-board');
@@ -114,25 +112,30 @@ playGame = (function () {
             this.classList.add(`${currentPlayer.symbol}-selected`);
             gameBoard.executeMove(currentPlayer.playerNumber, position);
             checkforWinner(currentPlayer);
+            checkForTie();
             switchCurrentPlayer();
         };
     };
     const checkforWinner = function (player) {
         const winLegend = [[0, 1, 2], [3, 4, 5], [6, 7, 8], [0, 3, 6], [1, 4, 7], [2, 5, 8], [0, 4, 8], [2, 4, 6]];
         const score = gameBoard.currentScore();
-        for (i = 0; i < winLegend.length; i++)  {
+        for (i = 0; i < winLegend.length; i++) {
             let winSequence = winLegend[i];
-            console.log(winSequence);
             if (score[winSequence[0]] === player.playerNumber && score[winSequence[1]] === player.playerNumber && score[winSequence[2]] === player.playerNumber) {
-                console.log(`${player.name} wins!`);
+                player.playerWin();
+                winner = player.playerNumber;
                 document.querySelector('.container-cover').style.display = 'block';
-                setTimeout(() => { declareWinner(player); }, 800);
+                setTimeout(() => { declareWinner(player); }, 700);
                 break;
-            } else if (score.every(index => index > 0)) {
-                document.querySelector('.container-cover').style.display = 'block';
-                setTimeout(() => { declareTie(); }, 800);
-                break;
-            }; 
+            };
+        };
+    
+    };
+    const checkForTie = function () {
+        score = gameBoard.currentScore();
+        if (score.every(index => index > 0) && winner < 1 ) {
+            document.querySelector('.container-cover').style.display = 'block';
+            setTimeout(() => { declareTie(); }, 700);
         };
     };
 
@@ -154,13 +157,15 @@ playGame = (function () {
     const newGame = function () {
         closeBoard();
         createBoard();
+        winner = 0;
     };
 
-    closeBoard = function () {
+    const closeBoard = function () {
         document.querySelector('.main').removeChild(document.querySelector('.game-board'));
+        winner = 0;
     };
 
-    return { createBoard, newGame, closeBoard, cellClick};
+    return { createBoard, newGame, closeBoard, cellClick, winner};
 })();
 
 setupGame.loadScreen();
